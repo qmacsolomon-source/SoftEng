@@ -1,11 +1,13 @@
 /**
  * Three-step quotation wizard.
  *
- * This page is intentionally self-contained: the estimate uses demo rates and
- * confirmation does not call a quotation or upload endpoint.
+ * The live figure on screen is a quick on-device estimate. Confirming posts the
+ * form to POST /api/quotations/quick, which re-validates every field, prices it
+ * from the database rates and stores the quotation (and site plan).
  */
 import { mountShell } from '../shell.js';
-import { EMAIL_RE, PHONE_RE } from '../forms.js';
+import { EMAIL_RE, PHONE_RE, setButtonLoading, toFormData } from '../forms.js';
+import { api } from '../api.js';
 import { escapeHtml, formatPeso, todayISO } from '../util.js';
 import { announce, toastSuccess } from '../ui.js';
 
@@ -270,14 +272,56 @@ function openSummary() {
   confirmButton.focus();
 }
 
-function mockSubmit() {
+function serverErrors(error) {
+  const fields = error?.fields || {};
+  const entries = Object.entries(fields).filter(([name]) => form.elements[name]);
+  entries.forEach(([name, message]) => setFieldError(name, String(message)));
+  return entries;
+}
+
+async function confirmSubmit() {
   if (submitted) return;
-  submitted = true;
-  dialog.close();
-  submitButton.textContent = 'Submitted (demo)';
-  submitButton.disabled = true;
-  toastSuccess('Quotation submitted (demo)', 'No data or attachment was sent to a backend.');
-  announce('Quotation submitted in demo mode. No data was sent.');
+  setButtonLoading(confirmButton, true, 'Saving…');
+  try {
+    const payload = {
+      client_name: value('client_name'),
+      client_email: value('client_email'),
+      client_phone: value('client_phone').replace(/[\s\-()]/g, ''),
+      project_name: value('project_name'),
+      project_location: value('project_location'),
+      project_type: value('project_type'),
+      floor_area_sqm: value('floor_area_sqm'),
+      number_of_floors: value('number_of_floors'),
+      target_start_date: value('target_start_date'),
+      finish_package: form.querySelector('input[name="finish_package"]:checked')?.value,
+      works_included: checkedWorks(),
+      include_labor: laborToggle.checked,
+      labor_pct: laborToggle.checked ? value('labor_pct') : '',
+      contingency_pct: value('contingency_pct'),
+      validity_date: value('validity_date'),
+      remarks: value('remarks'),
+      site_plan: form.elements.site_plan.files?.[0] || null,
+    };
+    const data = await api.postForm('/api/quotations/quick', toFormData(payload));
+    submitted = true;
+    dialog.close();
+    submitButton.disabled = true;
+    toastSuccess('Quotation generated', `${data.reference_no} - ${formatPeso(data.total_amount)}.`);
+    announce(`Quotation ${data.reference_no} generated.`);
+    window.location.assign(`/quotation-detail.html?id=${encodeURIComponent(data.id)}`);
+  } catch (error) {
+    dialog.close();
+    const bad = serverErrors(error);
+    if (bad.length) {
+      currentStep = STEP_FIELDS.findIndex((names) => names.includes(bad[0][0]));
+      renderStep();
+    }
+    summary.innerHTML = `<h3>${escapeHtml(error?.message || 'The quotation could not be saved.')}</h3>`;
+    summary.classList.add('is-visible');
+    summary.focus();
+  } finally {
+    setButtonLoading(confirmButton, false);
+  }
 }
 
 nextButton.addEventListener('click', () => {
@@ -305,7 +349,7 @@ document.querySelector('#edit-quotation').addEventListener('click', () => {
   dialog.close();
   form.elements.validity_date.focus();
 });
-confirmButton.addEventListener('click', mockSubmit);
+confirmButton.addEventListener('click', confirmSubmit);
 
 form.addEventListener('input', (event) => {
   const name = event.target.name;
