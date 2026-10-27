@@ -362,3 +362,5 @@ One logical change per commit; description in the imperative mood. Merges into
 
 Never commit `.env` — only `.env.example`. If a key is ever committed, rotate it
 in Supabase immediately; the service-role key bypasses all RLS.
+#   S o f t E n g  
+ 
