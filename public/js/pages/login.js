@@ -14,6 +14,8 @@ import { createModal, toastSuccess } from '../ui.js';
 import { session } from '../session.js';
 import { applyStoredTheme } from '../shell.js';
 import { getParam, qs } from '../util.js';
+import { initMockForm } from '../forms.js';
+
 
 applyStoredTheme();
 
@@ -175,3 +177,15 @@ forgotLink.addEventListener('click', (event) => {
 
 // Move focus to the field that is actually wrong when the server reports fields.
 form.addEventListener('focus', () => clearFormAlert(form), { once: true });
+
+document.addEventListener('DOMContentLoaded', () => {
+  initMockForm('loginForm', (data) => {
+    console.log('Mock Login Success! Data captured:', data);
+    
+    // Store dummy session info in localStorage
+    localStorage.setItem('user', JSON.stringify({ email: data.email, role: 'Admin' }));
+    
+    alert('Mock Login Successful! Redirecting to dashboard...');
+    window.location.href = '/quotation-detail.html'; // Redirect to your page
+  });
+});
