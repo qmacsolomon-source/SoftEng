@@ -6,7 +6,6 @@
  * PATCH /api/quotations/:id and, for Administrators only, a delete action.
  */
 import { api } from '../api.js';
-import { initMockForm } from '../forms.js';
 import { mountShell } from '../shell.js';
 import { session } from '../session.js';
 import { setButtonLoading } from '../forms.js';
@@ -420,14 +419,3 @@ if (!quotationId) {
 } else {
   await load();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Bind the UI mock validator to the form in quotation-detail.html
-  initMockForm('quotationUpdateForm', (formDataPayload) => {
-    console.log('Quotation Form Submitted Successfully!');
-    console.log('Captured Data:', formDataPayload);
-    
-    // Optional: UI feedback for testing
-    alert('Form validation passed! Check Developer Tools Console (F12) to view captured payload.');
-  });
-});

@@ -11,6 +11,11 @@
 
 create extension if not exists "pgcrypto";
 
+-- The helper functions in section 1 read public.profiles, which is created
+-- later in this file. Skip the creation-time body check so they can be defined
+-- first; they are only executed after every table exists.
+set check_function_bodies = off;
+
 -- -----------------------------------------------------------------------------
 -- 0. SHARED CONSTANTS
 --    The eight works covered by every quotation, in display order.
