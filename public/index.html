@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sign in to the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Dashboard — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/dashboard.js"></script>
+</head>
+<body data-page="dashboard">
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <!-- Replaced by dashboard.js once the shell and the summary arrive. -->
+        <div class="card">
+          <div class="card__body">
+            <div class="state">
+              <div class="state__icon" aria-hidden="true"><span class="spinner"></span></div>
+              <p class="state__text">Loading the dashboard…</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sign in to the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Sign in — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/login.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#login-form">Skip to the sign-in form</a>
+
+  <main class="auth-layout">
+    <!-- Brand panel: purely decorative, hidden below 1024px -->
+    <section class="auth-aside" aria-label="About this system">
+      <div class="auth-aside__brand">
+        <span class="sidebar__mark" aria-hidden="true">APA</span>
+        <div>
+          <div class="sidebar__name">APA Engineering Services</div>
+          <div class="sidebar__tagline">Antipolo, Philippines</div>
+        </div>
+      </div>
+
+      <div>
+        <h1 class="auth-aside__title">Quotations and site progress, without the paperwork.</h1>
+        <p class="auth-aside__text">
+          One place for finish-package costing, customized material quotes, live material
+          prices from Wilcon Depot, and milestone tracking for every project on site.
+        </p>
+        <ul class="auth-aside__list">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m20 6-11 11-5-5"/></svg>
+            <span>Quick Quotation from Standard, Elegant, Luxury or Bare finish packages.</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m20 6-11 11-5-5"/></svg>
+            <span>Customized Quotation with a live running total per work item.</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m20 6-11 11-5-5"/></svg>
+            <span>Project status timeline and progress photos, updated from site.</span>
+          </li>
+        </ul>
+      </div>
+
+      <p class="auth-aside__foot">
+        Estimation basis: Fajardo, <em>Simplified Construction Estimate</em>. Material prices: Wilcon Depot.
+      </p>
+    </section>
+
+    <!-- Sign-in form -->
+    <div class="auth-main">
+      <div class="auth-card">
+        <div class="auth-card__head">
+          <h1>Sign in</h1>
+          <p>Use the account issued by your Administrator, then choose the matching role.</p>
+        </div>
+
+        <!-- Server-level problems land here (never field-specific on sign-in) -->
+        <div class="error-summary" data-error-summary tabindex="-1" role="alert" aria-live="assertive"></div>
+
+        <div class="card">
+          <div class="card__body">
+            <form id="login-form" method="post" action="/api/auth/login" autocomplete="on">
+
+              <!-- Hidden fields -->
+              <input type="hidden" name="csrf_token" id="csrf_token">
+              <input type="hidden" name="login_timestamp" id="login_timestamp">
+
+              <div class="field" data-field="email">
+                <label class="field__label" for="email">Email address <span class="req" aria-hidden="true">*</span>
+                  <span class="field__required-note">(required)</span>
+                </label>
+                <input class="input" type="email" id="email" name="email" inputmode="email"
+                       autocomplete="username" placeholder="you@apaengineering.ph"
+                       aria-describedby="email-help" required>
+                <p class="field__help" id="email-help">The address your Administrator registered for you.</p>
+                <p class="field__error" data-error-for="email"></p>
+              </div>
+
+              <div class="field" data-field="password">
+                <label class="field__label" for="password">Password <span class="req" aria-hidden="true">*</span>
+                  <span class="field__required-note">(required, 8 characters minimum)</span>
+                </label>
+                <div class="input-group">
+                  <input class="input" type="password" id="password" name="password"
+                         autocomplete="current-password" placeholder="Your password"
+                         minlength="8" aria-describedby="password-help" required>
+                  <button type="button" class="input-group__suffix" data-toggle-password
+                          aria-label="Show password" aria-pressed="false">Show</button>
+                </div>
+                <p class="field__help" id="password-help">Passwords are case sensitive and never shown to anyone else.</p>
+                <p class="field__error" data-error-for="password"></p>
+              </div>
+
+              <fieldset style="margin-bottom: var(--space-4);">
+                <legend>Sign in as</legend>
+                <div class="role-toggle">
+                  <label class="option" for="role-staff">
+                    <input type="radio" id="role-staff" name="role" value="staff" checked
+                           aria-describedby="role-help">
+                    <span class="option__body">
+                      <span class="option__title">Staff</span>
+                      <span class="option__desc">Quotations, projects and site updates.</span>
+                    </span>
+                  </label>
+                  <label class="option" for="role-admin">
+                    <input type="radio" id="role-admin" name="role" value="admin"
+                           aria-describedby="role-help">
+                    <span class="option__body">
+                      <span class="option__title">Administrator / Owner</span>
+                      <span class="option__desc">Everything, plus prices and user accounts.</span>
+                    </span>
+                  </label>
+                </div>
+                <p class="field__help" id="role-help" style="margin-top:8px;">
+                  Your choice is checked against the role stored on your profile; a mismatch is rejected.
+                </p>
+                <p class="field__error" data-error-for="role"></p>
+              </fieldset>
+
+              <div class="row row--between row--wrap" style="margin-bottom: var(--space-5);">
+                <label class="switch" for="remember">
+                  <input type="checkbox" id="remember" name="remember" value="true" role="switch">
+                  <span class="switch__track" aria-hidden="true"></span>
+                  <span class="switch__label">Remember me
+                    <span class="switch__hint">Stay signed in on this device</span>
+                  </span>
+                </label>
+                <a href="#" id="forgot-link">Forgot password?</a>
+              </div>
+
+              <div class="row row--tight">
+                <button type="submit" class="btn btn--primary btn--lg" style="flex:1 1 auto;">Sign In</button>
+                <button type="reset" class="btn btn--secondary btn--lg">Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <p class="auth-foot">
+          After five failed attempts the form locks for 15 minutes, then unlocks automatically.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

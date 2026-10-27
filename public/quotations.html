@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Search, filter and open every quotation in the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Quotation Records — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/quotations.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Quotation Records</h2>
+            <p>Search, filter and open every quotation.</p>
+          </div>
+          <div class="page-header__actions">
+            <button type="button" class="btn btn--accent" id="export-csv">Export CSV</button>
+            <a class="btn btn--primary" href="/quotation-quick.html">New quick quotation</a>
+          </div>
+        </div>
+
+        <!-- Filters. Every change is written back into the address bar, so a
+             filtered list can be shared and survives a reload. -->
+        <form class="filter-bar" id="filters" role="search" aria-label="Filter quotations">
+          <div class="field">
+            <label class="field__label" for="f-keyword">Keyword</label>
+            <input class="input" type="search" id="f-keyword" name="keyword"
+                   placeholder="Reference, client, project or location"
+                   aria-describedby="f-keyword-help" autocomplete="off">
+            <p class="field__help" id="f-keyword-help">Searches the reference number, client, project name and location.</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-status">Status</label>
+            <select class="select" id="f-status" name="status">
+              <option value="">All statuses</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-type">Type</label>
+            <select class="select" id="f-type" name="type">
+              <option value="">All types</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-package">Finish package</label>
+            <select class="select" id="f-package" name="package">
+              <option value="">All packages</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-from">Created from</label>
+            <input class="input" type="date" id="f-from" name="from">
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-to">Created to</label>
+            <input class="input" type="date" id="f-to" name="to">
+          </div>
+
+          <div class="filter-bar__actions">
+            <button type="submit" class="btn btn--primary">Apply filters</button>
+            <button type="button" class="btn btn--ghost" id="filters-reset">Reset</button>
+          </div>
+
+          <p class="filter-bar__count" id="filters-count" role="status">Showing 0 of 0 quotations</p>
+        </form>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table" id="quotations-table">
+              <caption class="sr-only">Quotation records matching the current filters</caption>
+              <thead>
+                <tr>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="reference_no">
+                      Reference <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="client_name">
+                      Client <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col">Project</th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="floor_area_sqm">
+                      Floor area <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col">Finish package</th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="total_amount">
+                      Total <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="status">
+                      Status <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col" aria-sort="descending">
+                    <button type="button" class="th-sort" data-sort="created_at">
+                      Created <span class="th-sort__icon" aria-hidden="true">&#9660;</span>
+                    </button>
+                  </th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="quotations-body"></tbody>
+            </table>
+          </div>
+
+          <!-- The pagination block is redrawn after every load -->
+          <div id="quotations-pagination"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

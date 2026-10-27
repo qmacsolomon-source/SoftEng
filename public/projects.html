@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Track every project, its status and its progress in the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Project Tracking — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/projects.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Project Tracking</h2>
+            <p>Every project, its status and its progress.</p>
+          </div>
+          <div class="page-header__actions">
+            <a class="btn btn--secondary" href="/project-status-update.html">Log a status update</a>
+            <button type="button" class="btn btn--primary" id="new-project">New project</button>
+          </div>
+        </div>
+
+        <!-- Headline figures from GET /api/projects/summary -->
+        <div class="grid grid--4 mb-5" id="summary" aria-label="Project summary">
+          <div class="stat-card stat-card--blue">
+            <span class="stat-card__icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+            </span>
+            <span class="stat-card__label">Planning</span>
+            <span class="stat-card__value" id="stat-planning">—</span>
+            <span class="stat-card__hint">Design, permits and materials</span>
+          </div>
+          <div class="stat-card stat-card--amber">
+            <span class="stat-card__icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 17h20"/><path d="M4 17v-3a8 8 0 0 1 5-7.4"/><path d="M20 17v-3a8 8 0 0 0-5-7.4"/><path d="M10 6.5V3h4v3.5"/></svg>
+            </span>
+            <span class="stat-card__label">Ongoing</span>
+            <span class="stat-card__value" id="stat-ongoing">—</span>
+            <span class="stat-card__hint">Work happening on site</span>
+          </div>
+          <div class="stat-card stat-card--green">
+            <span class="stat-card__icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-4.5"/></svg>
+            </span>
+            <span class="stat-card__label">Completed</span>
+            <span class="stat-card__value" id="stat-completed">—</span>
+            <span class="stat-card__hint">Turned over to the client</span>
+          </div>
+          <div class="stat-card stat-card--accent">
+            <span class="stat-card__icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M16 13h3"/></svg>
+            </span>
+            <span class="stat-card__label">Contract value</span>
+            <span class="stat-card__value stat-card__value--small" id="stat-contract">—</span>
+            <span class="stat-card__hint">Total of every project</span>
+          </div>
+        </div>
+
+        <!-- Filters. Every change is written back into the address bar, so a
+             filtered list can be shared and survives a reload. -->
+        <form class="filter-bar" id="filters" role="search" aria-label="Filter projects">
+          <div class="field" data-field="keyword">
+            <label class="field__label" for="f-keyword">Search</label>
+            <input class="input" type="search" id="f-keyword" name="keyword"
+                   placeholder="Code, project, client or location"
+                   aria-describedby="f-keyword-help" autocomplete="off">
+            <p class="field__help" id="f-keyword-help">Searches the project code, project name, client name and location.</p>
+          </div>
+
+          <div class="field" data-field="status">
+            <label class="field__label" for="f-status">Status</label>
+            <select class="select" id="f-status" name="status">
+              <option value="">All statuses</option>
+            </select>
+          </div>
+
+          <div class="field" data-field="from">
+            <label class="field__label" for="f-from">Created from</label>
+            <input class="input" type="date" id="f-from" name="from" aria-describedby="f-dates-help">
+          </div>
+
+          <div class="field" data-field="to">
+            <label class="field__label" for="f-to">Created to</label>
+            <input class="input" type="date" id="f-to" name="to" aria-describedby="f-dates-help">
+            <p class="field__help" id="f-dates-help">Matches the date the project record was created.</p>
+          </div>
+
+          <div class="filter-bar__actions">
+            <button type="submit" class="btn btn--primary">Apply filters</button>
+            <button type="button" class="btn btn--ghost" id="filters-reset">Reset</button>
+          </div>
+
+          <p class="filter-bar__count" id="filters-count" role="status">Loading projects…</p>
+        </form>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table" id="projects-table">
+              <caption class="sr-only">Projects matching the current filters</caption>
+              <thead>
+                <tr>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="project_code">
+                      Code <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="name">
+                      Project <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col">Location</th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="status">
+                      Status <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="progress_pct">
+                      Progress <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col" aria-sort="none">
+                    <button type="button" class="th-sort" data-sort="contract_amount">
+                      Contract amount <span class="th-sort__icon" aria-hidden="true">&#8597;</span>
+                    </button>
+                  </th>
+                  <th scope="col">Target completion</th>
+                  <th scope="col" aria-sort="descending">
+                    <button type="button" class="th-sort" data-sort="created_at">
+                      Created <span class="th-sort__icon" aria-hidden="true">&#9660;</span>
+                    </button>
+                  </th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="projects-body"></tbody>
+            </table>
+          </div>
+
+          <!-- The pagination block is redrawn after every load -->
+          <div id="projects-pagination"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

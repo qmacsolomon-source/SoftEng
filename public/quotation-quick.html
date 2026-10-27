@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Generate a Quick Quotation from a finish package and floor area in the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Quick Quotation — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/quotation-quick.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Quick Quotation</h2>
+            <p>Pick a finish package, enter the floor area, and the estimate is computed for you.</p>
+          </div>
+          <div class="page-header__actions">
+            <a class="btn btn--secondary" href="/quotation-detailed.html">Customized quotation</a>
+            <a class="btn btn--ghost" href="/quotations.html">Quotation records</a>
+          </div>
+        </div>
+
+        <!-- Four-step guide. The controller moves aria-current as the form fills in. -->
+        <ol class="steps" id="steps" aria-label="Form progress">
+          <li class="step" id="step-client" aria-current="step">
+            <span class="step__marker" aria-hidden="true">1</span>
+            <span class="step__label">Client details</span>
+          </li>
+          <li class="step" id="step-project">
+            <span class="step__marker" aria-hidden="true">2</span>
+            <span class="step__label">Project details</span>
+          </li>
+          <li class="step" id="step-scope">
+            <span class="step__marker" aria-hidden="true">3</span>
+            <span class="step__label">Package and works</span>
+          </li>
+          <li class="step" id="step-save">
+            <span class="step__marker" aria-hidden="true">4</span>
+            <span class="step__label">Plans and notes</span>
+          </li>
+        </ol>
+
+        <div class="grid grid--sidebar-right">
+          <!-- ------------------------------------------------------------------
+               MAJOR FORM 1 - Quick Quotation Request
+               ------------------------------------------------------------------ -->
+          <form id="quick-form" novalidate>
+            <div class="error-summary" data-error-summary tabindex="-1" role="alert" aria-live="assertive"></div>
+
+            <div class="alert alert--info" role="note" style="margin-bottom:var(--space-5);">
+              <span class="alert__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+              </span>
+              <span class="alert__body">
+                <strong class="alert__title">Quotation reference</strong>
+                A reference number such as <span class="font-mono">QTE-2026-0001</span> is assigned automatically when you
+                generate the quotation. Fields marked <span class="req" aria-hidden="true">*</span> are required.
+              </span>
+            </div>
+
+            <!-- 1. Client details -->
+            <fieldset>
+              <legend>1. Client details</legend>
+
+              <div class="field" data-field="client_name">
+                <label class="field__label" for="client_name">Client full name <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 2–60 characters)</span></label>
+                <input class="input" type="text" id="client_name" name="client_name" maxlength="60"
+                       autocomplete="name" placeholder="e.g. Maria L. Santos"
+                       aria-describedby="client_name-help" required>
+                <p class="field__help" id="client_name-help">The name that will appear on the printed quotation.</p>
+                <p class="field__error" data-error-for="client_name" role="alert"></p>
+              </div>
+
+              <div class="form-grid">
+                <div class="field" data-field="client_email">
+                  <label class="field__label" for="client_email">Email address <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span></label>
+                  <input class="input" type="email" id="client_email" name="client_email" maxlength="254"
+                         inputmode="email" autocomplete="email" placeholder="name@example.com"
+                         aria-describedby="client_email-help" required>
+                  <p class="field__help" id="client_email-help">Where the quotation will be sent, for example maria@example.com.</p>
+                  <p class="field__error" data-error-for="client_email" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="client_phone">
+                  <label class="field__label" for="client_phone">Contact number <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, Philippine mobile)</span></label>
+                  <input class="input" type="tel" id="client_phone" name="client_phone" maxlength="15"
+                         inputmode="tel" autocomplete="tel" placeholder="09171234567"
+                         aria-describedby="client_phone-help" required>
+                  <p class="field__help" id="client_phone-help">11 digits starting with 09, or the +639 form. Example: 09171234567.</p>
+                  <p class="field__error" data-error-for="client_phone" role="alert"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- 2. Project details -->
+            <fieldset>
+              <legend>2. Project details</legend>
+
+              <div class="form-grid">
+                <div class="field" data-field="project_name">
+                  <label class="field__label" for="project_name">Project name</label>
+                  <input class="input" type="text" id="project_name" name="project_name" maxlength="160"
+                         placeholder="e.g. Santos Residence"
+                         aria-describedby="project_name-help">
+                  <p class="field__help" id="project_name-help">A short name for the build. Optional, but it makes the record easier to find later.</p>
+                  <p class="field__error" data-error-for="project_name" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="project_location">
+                  <label class="field__label" for="project_location">Project location <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 3–160 characters)</span></label>
+                  <input class="input" type="text" id="project_location" name="project_location" maxlength="160"
+                         autocomplete="street-address" placeholder="e.g. Brgy. San Roque, Antipolo City"
+                         aria-describedby="project_location-help" required>
+                  <p class="field__help" id="project_location-help">Barangay, city and province where the work will be done.</p>
+                  <p class="field__error" data-error-for="project_location" role="alert"></p>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field" data-field="project_type">
+                  <label class="field__label" for="project_type">Project type <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span></label>
+                  <select class="select" id="project_type" name="project_type" required aria-describedby="project_type-help">
+                    <option value="">Select a project type…</option>
+                  </select>
+                  <p class="field__help" id="project_type-help">What kind of construction this is. It shapes the assumptions behind the rates.</p>
+                  <p class="field__error" data-error-for="project_type" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="target_start_date">
+                  <label class="field__label" for="target_start_date">Target start date</label>
+                  <input class="input" type="date" id="target_start_date" name="target_start_date"
+                         aria-describedby="target_start_date-help">
+                  <p class="field__help" id="target_start_date-help">When the client hopes to break ground. Optional; a date in the past is not allowed.</p>
+                  <p class="field__error" data-error-for="target_start_date" role="alert"></p>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field" data-field="floor_area_sqm">
+                  <label class="field__label" for="floor_area_sqm">Floor area <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 10–5,000 sqm)</span></label>
+                  <div class="input-group">
+                    <input class="input" type="number" id="floor_area_sqm" name="floor_area_sqm"
+                           min="10" max="5000" step="0.01" inputmode="decimal" placeholder="120"
+                           aria-describedby="floor_area_sqm-help" required>
+                    <span class="input-group__suffix" aria-hidden="true">sqm</span>
+                  </div>
+                  <p class="field__help" id="floor_area_sqm-help">The total floor area to be built, in square metres. This is the figure the whole estimate is driven by.</p>
+                  <p class="field__error" data-error-for="floor_area_sqm" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="number_of_floors">
+                  <label class="field__label" for="number_of_floors">Number of floors <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 1–20)</span></label>
+                  <input class="input" type="number" id="number_of_floors" name="number_of_floors"
+                         min="1" max="20" step="1" inputmode="numeric" value="1"
+                         aria-describedby="number_of_floors-help" required>
+                  <p class="field__help" id="number_of_floors-help">How many storeys the floor area is spread across, counting the ground floor as 1.</p>
+                  <p class="field__error" data-error-for="number_of_floors" role="alert"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- 3. Finish package and works included -->
+            <fieldset>
+              <legend>3. Finish package and works included</legend>
+
+              <!-- Radio group needs a fieldset + legend for a group label, so the inner
+                   fieldset is only a semantic wrapper and has no visible chrome. -->
+              <fieldset style="border:0;padding:0;margin:0;background:transparent;" aria-describedby="finish_package-help">
+                <legend style="padding:0;text-transform:none;letter-spacing:0;color:var(--color-text);font-size:0.83rem;">
+                  Finish package <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span>
+                </legend>
+                <div class="field" data-field="finish_package" style="margin-top:6px;">
+                  <div class="option-grid" role="radiogroup" aria-describedby="finish_package-help">
+                    <label class="option">
+                      <input type="radio" id="package-standard" name="finish_package" value="standard" checked>
+                      <span class="option__body">
+                        <span class="option__title">Standard</span>
+                        <span class="option__desc" data-package-desc="standard">Reliable mid-range brands for a typical house and lot.</span>
+                      </span>
+                    </label>
+                    <label class="option">
+                      <input type="radio" id="package-elegant" name="finish_package" value="elegant">
+                      <span class="option__body">
+                        <span class="option__title">Elegant</span>
+                        <span class="option__desc" data-package-desc="elegant">Upgraded finishes for two-storey homes and small offices.</span>
+                      </span>
+                    </label>
+                    <label class="option">
+                      <input type="radio" id="package-luxury" name="finish_package" value="luxury">
+                      <span class="option__body">
+                        <span class="option__title">Luxury</span>
+                        <span class="option__desc" data-package-desc="luxury">Premium imported finishes for high-end residences.</span>
+                      </span>
+                    </label>
+                    <label class="option">
+                      <input type="radio" id="package-bare" name="finish_package" value="bare">
+                      <span class="option__body">
+                        <span class="option__title">Bare</span>
+                        <span class="option__desc" data-package-desc="bare">Structural shell with basic finishes only.</span>
+                      </span>
+                    </label>
+                  </div>
+                  <p class="field__help" id="finish_package-help">Each package fixes the brands and materials used across all eight works, so the price depends only on the floor area.</p>
+                  <p class="field__error" data-error-for="finish_package" role="alert"></p>
+                </div>
+              </fieldset>
+
+              <fieldset style="border:0;padding:0;margin:0;background:transparent;" aria-describedby="works_included-help">
+                <legend style="padding:0;text-transform:none;letter-spacing:0;color:var(--color-text);font-size:0.83rem;">
+                  Works included <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(tick at least one)</span>
+                </legend>
+                <div class="field" data-field="works_included" style="margin-top:6px;">
+                  <div class="option-grid option-grid--compact">
+                    <label class="option">
+                      <input type="checkbox" id="work-flooring" name="works_included" value="flooring" checked>
+                      <span class="option__body"><span class="option__title">Flooring</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-ceiling" name="works_included" value="ceiling" checked>
+                      <span class="option__body"><span class="option__title">Ceiling</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-walls" name="works_included" value="walls" checked>
+                      <span class="option__body"><span class="option__title">Walls</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-roofing" name="works_included" value="roofing" checked>
+                      <span class="option__body"><span class="option__title">Roofing</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-doors-windows" name="works_included" value="doors_windows" checked>
+                      <span class="option__body"><span class="option__title">Doors and Windows</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-toilet-bath" name="works_included" value="toilet_bath" checked>
+                      <span class="option__body"><span class="option__title">Toilet and Bath</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-kitchen" name="works_included" value="kitchen" checked>
+                      <span class="option__body"><span class="option__title">Kitchen</span></span>
+                    </label>
+                    <label class="option">
+                      <input type="checkbox" id="work-electrical-lighting" name="works_included" value="electrical_lighting" checked>
+                      <span class="option__body"><span class="option__title">Electrical and Lighting</span></span>
+                    </label>
+                  </div>
+                  <p class="field__help" id="works_included-help">Leave everything ticked for a complete turnkey estimate, or untick the works this client is not asking for. Unticking a work removes its cost from the estimate.</p>
+                  <p class="field__error" data-error-for="works_included" role="alert"></p>
+                </div>
+              </fieldset>
+            </fieldset>
+
+            <!-- 4. Site plan and remarks -->
+            <fieldset>
+              <legend>4. Site plan and remarks</legend>
+
+              <div class="field" data-field="site_plan">
+                <label class="field__label" for="site_plan">Site plan or floor plan</label>
+                <div class="file-drop">
+                  <span class="file-drop__icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 8 5-5 5 5"/><path d="M12 3v12"/></svg>
+                  </span>
+                  <span class="file-drop__title">Drop a plan here, or tap to choose a file</span>
+                  <span class="file-drop__hint">PDF, JPG or PNG, up to 5 MB</span>
+                  <span class="file-drop__selected">Selected: <span data-file-name>No file chosen</span></span>
+                  <input type="file" id="site_plan" name="site_plan"
+                         accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
+                         aria-describedby="site_plan-help">
+                </div>
+                <p class="field__help" id="site_plan-help">Optional. Attach the client's plan so the estimate can be checked against it. Files stay private to signed-in staff.</p>
+                <p class="field__error" data-error-for="site_plan" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="remarks">
+                <label class="field__label" for="remarks">Remarks</label>
+                <textarea class="textarea" id="remarks" name="remarks" rows="4" maxlength="300"
+                          placeholder="e.g. Client wants a carport included and a bigger kitchen counter."
+                          aria-describedby="remarks-help"></textarea>
+                <p class="field__help" id="remarks-help">Anything the estimator should know: inclusions, exclusions or special requests. Optional, up to 300 characters.</p>
+                <span class="char-counter" data-counter-for="remarks">0 / 300 characters</span>
+                <p class="field__error" data-error-for="remarks" role="alert"></p>
+              </div>
+            </fieldset>
+
+            <!-- Hidden fields carried with the submit. -->
+            <input type="hidden" id="csrf_token" name="csrf_token" value="">
+            <input type="hidden" id="price_source_at" name="price_source_at" value="">
+            <input type="hidden" id="created_by" name="created_by" value="">
+            <input type="hidden" id="quotation_reference" name="quotation_reference" value="auto">
+
+            <div style="display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:var(--space-5);">
+              <p class="field__help" style="margin-right:auto;">Tip: press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to generate the quotation from anywhere in the form.</p>
+              <button type="reset" class="btn btn--secondary" id="clear-btn">Clear Form</button>
+              <button type="submit" class="btn btn--primary btn--lg" id="generate-btn">Generate Quotation</button>
+            </div>
+          </form>
+
+          <!-- ------------------------------------------------------------------
+               Right column: the live estimate
+               ------------------------------------------------------------------ -->
+          <div class="stack">
+            <div class="card card--sticky">
+              <div class="card__header">
+                <h3>Live estimate</h3>
+                <p>Recomputed as you change the floor area, package or works.</p>
+              </div>
+              <div class="card__body">
+                <div class="total-panel">
+                  <div class="total-panel__hero">
+                    <div class="total-panel__hero-label">Estimated project cost</div>
+                    <div class="total-panel__hero-value total-value" id="total-value"
+                         role="status" aria-live="polite" aria-atomic="true">—</div>
+                    <div class="total-panel__hero-hint" id="total-hint">Enter a floor area of at least 10 sqm to see an estimate.</div>
+                  </div>
+
+                  <div id="panel-state"></div>
+
+                  <ul class="breakdown-list" id="breakdown" aria-label="Estimated cost per work"></ul>
+
+                  <dl class="quote-summary" id="panel-summary" style="margin-left:0;width:100%;"></dl>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__header">
+                <h3>How this is estimated</h3>
+              </div>
+              <div class="card__body" id="basis-body">
+                <dl class="detail-list">
+                  <div class="detail-list__row">
+                    <dt>Estimation basis</dt>
+                    <dd>Fajardo, <em>Simplified Construction Estimate</em></dd>
+                  </div>
+                  <div class="detail-list__row">
+                    <dt>Material prices</dt>
+                    <dd>Wilcon Depot</dd>
+                  </div>
+                  <div class="detail-list__row">
+                    <dt>Prices last updated</dt>
+                    <dd id="price-updated">—</dd>
+                  </div>
+                  <div class="detail-list__row">
+                    <dt>Rate for this package</dt>
+                    <dd id="package-rate">—</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+
+            <div class="alert alert--info" role="note">
+              <span class="alert__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+              </span>
+              <span class="alert__body">
+                Labour is added at the studio's standard percentage, and the estimate assumes the works you ticked
+                above. Anything the client adds later is best handled with a Customized Quotation.
+              </span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

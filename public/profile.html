@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Update your APA Engineering Services profile details, change your password and choose a light or dark theme.">
+  <meta name="robots" content="noindex">
+  <title>Profile &amp; settings — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/profile.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Profile &amp; settings</h2>
+            <p>Your details, password and appearance — only you can change these.</p>
+          </div>
+        </div>
+
+        <div class="grid grid--sidebar-left">
+          <!-- Left column: identity summary -->
+          <div class="card">
+            <div class="card__body" style="text-align:center;">
+              <span class="avatar avatar--lg" id="profile-avatar" aria-hidden="true">—</span>
+              <h3 class="mt-3" id="profile-name">—</h3>
+              <p class="text-muted text-sm" id="profile-position" style="margin:4px 0 10px;"></p>
+              <span class="badge badge--neutral" id="profile-role-badge">—</span>
+              <p class="text-sm mt-3" id="profile-email" style="margin-bottom:0;">—</p>
+              <p class="text-sm text-muted" id="profile-since" style="margin:4px 0 0;"></p>
+            </div>
+          </div>
+
+          <!-- Right column: editable forms, stacked -->
+          <div class="grid">
+            <!-- Your details -->
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <h3>Your details</h3>
+                  <p>Kept on your staff profile and shown across the system.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <form id="details-form" method="post" action="/api/auth/profile" autocomplete="on" novalidate>
+                  <div class="error-summary" data-error-summary tabindex="-1" role="alert" aria-live="assertive"></div>
+
+                  <div class="field" data-field="full_name">
+                    <label class="field__label" for="full_name">Full name <span class="req" aria-hidden="true">*</span>
+                      <span class="field__required-note">(required)</span>
+                    </label>
+                    <input class="input" type="text" id="full_name" name="full_name"
+                           autocomplete="name" placeholder="Juan Dela Cruz"
+                           aria-describedby="full_name-help" required>
+                    <p class="field__help" id="full_name-help">The name shown on quotations and in the account menu.</p>
+                    <p class="field__error" data-error-for="full_name"></p>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="field" data-field="phone">
+                      <label class="field__label" for="phone">Contact number</label>
+                      <input class="input" type="tel" id="phone" name="phone" inputmode="tel"
+                             autocomplete="tel" placeholder="09171234567"
+                             aria-describedby="phone-help">
+                      <p class="field__help" id="phone-help">Philippine mobile, e.g. 09171234567 or +639171234567. Optional.</p>
+                      <p class="field__error" data-error-for="phone"></p>
+                    </div>
+
+                    <div class="field" data-field="position">
+                      <label class="field__label" for="position">Position</label>
+                      <input class="input" type="text" id="position" name="position"
+                             placeholder="e.g. Site Engineer" maxlength="80"
+                             aria-describedby="position-help">
+                      <p class="field__help" id="position-help">Your role at the firm. Optional.</p>
+                      <p class="field__error" data-error-for="position"></p>
+                    </div>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="field">
+                      <label class="field__label" for="detail-email">Email address</label>
+                      <input class="input" type="email" id="detail-email" value="" disabled
+                             aria-describedby="detail-email-help">
+                      <p class="field__help" id="detail-email-help">Managed by an Administrator — ask them to change it.</p>
+                    </div>
+
+                    <div class="field">
+                      <label class="field__label" for="detail-role">Role</label>
+                      <input class="input" type="text" id="detail-role" value="" disabled
+                             aria-describedby="detail-role-help">
+                      <p class="field__help" id="detail-role-help">Your access level. Only an Administrator can change it.</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn--primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Change your password -->
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <h3>Change your password</h3>
+                  <p>You will stay signed in on this device after the change.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <form id="password-form" method="post" action="/api/auth/change-password" autocomplete="off" novalidate>
+                  <div class="error-summary" data-error-summary tabindex="-1" role="alert" aria-live="assertive"></div>
+
+                  <div class="field" data-field="current_password">
+                    <label class="field__label" for="current_password">Current password <span class="req" aria-hidden="true">*</span>
+                      <span class="field__required-note">(required)</span>
+                    </label>
+                    <div class="input-group">
+                      <input class="input" type="password" id="current_password" name="current_password"
+                             autocomplete="current-password" placeholder="Your current password"
+                             minlength="8" aria-describedby="current_password-help" required>
+                      <button type="button" class="input-group__suffix" data-toggle-password
+                              aria-label="Show current password" aria-pressed="false">Show</button>
+                    </div>
+                    <p class="field__help" id="current_password-help">We check this before making any change.</p>
+                    <p class="field__error" data-error-for="current_password"></p>
+                  </div>
+
+                  <div class="field" data-field="new_password">
+                    <label class="field__label" for="new_password">New password <span class="req" aria-hidden="true">*</span>
+                      <span class="field__required-note">(required, 8 characters minimum)</span>
+                    </label>
+                    <div class="input-group">
+                      <input class="input" type="password" id="new_password" name="new_password"
+                             autocomplete="new-password" placeholder="At least 8 characters"
+                             minlength="8" aria-describedby="new_password-help" required>
+                      <button type="button" class="input-group__suffix" data-toggle-password
+                              aria-label="Show new password" aria-pressed="false">Show</button>
+                    </div>
+                    <p class="field__help" id="new_password-help">Use 8 characters or more. Longer is stronger; avoid your name or the word &ldquo;password&rdquo;.</p>
+                    <p class="field__error" data-error-for="new_password"></p>
+                  </div>
+
+                  <div class="field" data-field="confirm_password">
+                    <label class="field__label" for="confirm_password">Confirm new password <span class="req" aria-hidden="true">*</span>
+                      <span class="field__required-note">(required)</span>
+                    </label>
+                    <div class="input-group">
+                      <input class="input" type="password" id="confirm_password" name="confirm_password"
+                             autocomplete="new-password" placeholder="Retype the new password"
+                             minlength="8" aria-describedby="confirm_password-help" required>
+                      <button type="button" class="input-group__suffix" data-toggle-password
+                              aria-label="Show confirmation password" aria-pressed="false">Show</button>
+                    </div>
+                    <p class="field__help" id="confirm_password-help">Both new password boxes must match exactly.</p>
+                    <p class="field__error" data-error-for="confirm_password"></p>
+                  </div>
+
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn--primary">Update password</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Appearance -->
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <h3>Appearance</h3>
+                  <p>Applies to this device only.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <label class="switch" for="theme-dark">
+                  <input type="checkbox" id="theme-dark" name="theme_dark" role="switch"
+                         aria-describedby="theme-dark-hint">
+                  <span class="switch__track" aria-hidden="true"></span>
+                  <span class="switch__label">Dark mode
+                    <span class="switch__hint" id="theme-dark-hint">Easier on the eyes for evening site work.</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

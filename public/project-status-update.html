@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Record a milestone, progress and a site photo for a project in the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Project Status Update — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/project-status-update.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Project Status Update</h2>
+            <p>Record a milestone, progress and a site photo.</p>
+          </div>
+          <div class="page-header__actions">
+            <a class="btn btn--secondary" href="/projects.html">Back to project tracking</a>
+          </div>
+        </div>
+
+        <!-- Three-step guide. The controller moves aria-current as the form fills in. -->
+        <ol class="steps" id="status-steps" aria-label="Form progress">
+          <li class="step" id="step-project" aria-current="step">
+            <span class="step__marker" aria-hidden="true">1</span>
+            <span class="step__label">Choose the project</span>
+          </li>
+          <li class="step" id="step-milestone">
+            <span class="step__marker" aria-hidden="true">2</span>
+            <span class="step__label">Record the milestone</span>
+          </li>
+          <li class="step" id="step-save">
+            <span class="step__marker" aria-hidden="true">3</span>
+            <span class="step__label">Save the update</span>
+          </li>
+        </ol>
+
+        <div class="grid grid--sidebar-right">
+          <!-- ------------------------------------------------------------------
+               The form
+               ------------------------------------------------------------------ -->
+          <form id="status-form" novalidate>
+            <div class="error-summary" data-error-summary tabindex="-1" role="alert" aria-live="assertive"></div>
+
+            <!-- Confirmation, shown after a successful save. -->
+            <div class="alert alert--success" id="success-note" role="status" hidden style="margin-bottom:var(--space-5);">
+              <span class="alert__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-4.5"/></svg>
+              </span>
+              <span class="alert__body">
+                <strong class="alert__title">Update saved</strong>
+                <span id="success-text"></span>
+                <a href="#" id="success-link">View the project timeline</a>
+              </span>
+            </div>
+
+            <!-- 1. Project and status -->
+            <fieldset>
+              <legend>1. Project and status</legend>
+
+              <div class="field" data-field="project_id">
+                <label class="field__label" for="project_id">Project <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span></label>
+                <select class="select" id="project_id" name="project_id" required aria-describedby="project_id-help">
+                  <option value="">Loading projects…</option>
+                </select>
+                <p class="field__help" id="project_id-help">Pick the project this update belongs to. Each entry shows the project code, the name and its current status.</p>
+                <p class="field__error" data-error-for="project_id" role="alert"></p>
+              </div>
+
+              <!-- Radio group. The inner fieldset is only a semantic wrapper, so its
+                   chrome is removed with an inline style; it must not be dropped
+                   because a group of radios needs a fieldset + legend. -->
+              <fieldset style="border:0;padding:0;margin:0;background:transparent;" aria-describedby="status-help">
+                <legend style="padding:0;text-transform:none;letter-spacing:0;color:var(--color-text);font-size:0.83rem;">
+                  Current status <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span>
+                </legend>
+                <div class="field" data-field="status" style="margin-top:6px;">
+                  <div class="option-grid" role="radiogroup" aria-describedby="status-help">
+                    <label class="option">
+                      <input type="radio" id="status-planning" name="status" value="planning">
+                      <span class="option__body">
+                        <span class="option__title">Planning</span>
+                        <span class="option__desc">Design, permits and materials are being prepared.</span>
+                      </span>
+                    </label>
+                    <label class="option">
+                      <input type="radio" id="status-ongoing" name="status" value="ongoing" checked>
+                      <span class="option__body">
+                        <span class="option__title">Ongoing</span>
+                        <span class="option__desc">Construction work is happening on site.</span>
+                      </span>
+                    </label>
+                    <label class="option">
+                      <input type="radio" id="status-completed" name="status" value="completed">
+                      <span class="option__body">
+                        <span class="option__title">Completed</span>
+                        <span class="option__desc">Turned over to the client. Records as 100%.</span>
+                      </span>
+                    </label>
+                  </div>
+                  <p class="field__help" id="status-help">Where the project stands after this milestone. Changing this updates the suggested milestone names below.</p>
+                  <p class="field__error" data-error-for="status" role="alert"></p>
+                </div>
+              </fieldset>
+
+              <div class="field" data-field="updated_by">
+                <label class="field__label" for="updated_by">Recorded by</label>
+                <input class="input" type="text" id="updated_by" name="updated_by" value="" readonly
+                       aria-describedby="updated_by-help" style="background:var(--color-surface-alt);">
+                <p class="field__help" id="updated_by-help">The signed-in user this update will be filed under. This cannot be changed here.</p>
+              </div>
+            </fieldset>
+
+            <!-- 2. Milestone details -->
+            <fieldset>
+              <legend>2. Milestone details</legend>
+
+              <div class="field" data-field="milestone_name">
+                <label class="field__label" for="milestone_name">Milestone <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 2–120 characters)</span></label>
+                <input class="input" type="text" id="milestone_name" name="milestone_name" maxlength="120"
+                       list="milestone-suggestions" placeholder="e.g. Column and beam framing"
+                       aria-describedby="milestone_name-help" required>
+                <datalist id="milestone-suggestions"></datalist>
+                <p class="field__help" id="milestone_name-help">What was finished. Start typing to pick a usual milestone for the chosen status, or write your own.</p>
+                <p class="field__error" data-error-for="milestone_name" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="progress_pct">
+                <label class="field__label" for="progress_pct">Progress percentage <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 0–100)</span></label>
+                <div class="slider-field">
+                  <input type="range" id="progress_pct" name="progress_pct" min="0" max="100" step="5" value="0"
+                         aria-describedby="progress_pct-help" required>
+                  <output class="slider-field__value" for="progress_pct" data-slider-output="progress_pct">0%</output>
+                </div>
+                <p class="field__help" id="progress_pct-help">How much of the whole project is done once this milestone is counted. Slide in steps of 5%. A completed project must read 100%.</p>
+                <p class="field__error" data-error-for="progress_pct" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="milestone_date">
+                <label class="field__label" for="milestone_date">Milestone date <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span></label>
+                <input class="input" type="date" id="milestone_date" name="milestone_date" value=""
+                       aria-describedby="milestone_date-help" required>
+                <p class="field__help" id="milestone_date-help">The day the work was finished on site. Today is filled in for you; a future date is not allowed.</p>
+                <p class="field__error" data-error-for="milestone_date" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="time_logged">
+                <label class="field__label" for="time_logged">Time logged</label>
+                <input class="input" type="time" id="time_logged" name="time_logged" value=""
+                       aria-describedby="time_logged-help">
+                <p class="field__help" id="time_logged-help">The time you are logging this entry. Optional, and pre-filled with the current time.</p>
+                <p class="field__error" data-error-for="time_logged" role="alert"></p>
+              </div>
+            </fieldset>
+
+            <!-- 3. Site photo and remarks -->
+            <fieldset>
+              <legend>3. Site photo and remarks</legend>
+
+              <div class="field" data-field="progress_photo">
+                <label class="field__label" for="progress_photo">Site photo</label>
+                <div class="file-drop">
+                  <span class="file-drop__icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>
+                  </span>
+                  <span class="file-drop__title">Drop a photo here, or tap to choose one</span>
+                  <span class="file-drop__hint">JPG, PNG or WEBP, up to 5 MB</span>
+                  <span class="file-drop__selected">Selected: <span data-file-name>No file chosen</span></span>
+                  <input type="file" id="progress_photo" name="progress_photo"
+                         accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                         aria-describedby="progress_photo-help">
+                </div>
+                <p class="field__help" id="progress_photo-help">A photo of the finished work, kept with this milestone. Optional. Photos stay private to signed-in staff.</p>
+                <p class="field__error" data-error-for="progress_photo" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="remarks">
+                <label class="field__label" for="remarks">Remarks</label>
+                <textarea class="textarea" id="remarks" name="remarks" rows="4" maxlength="1000"
+                          placeholder="e.g. Columns and beams for the ground floor are cast; curing until Friday."
+                          aria-describedby="remarks-help"></textarea>
+                <p class="field__help" id="remarks-help">Anything worth remembering about this milestone: quantities, delays, next steps. Optional, up to 1,000 characters.</p>
+                <span class="char-counter" data-counter-for="remarks">0 / 1000 characters</span>
+                <p class="field__error" data-error-for="remarks" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="notify_owner">
+                <span class="field__label" id="notify_owner-label">Owner notification</span>
+                <label class="switch" for="notify_owner">
+                  <input type="checkbox" id="notify_owner" name="notify_owner" role="switch"
+                         aria-describedby="notify_owner-help">
+                  <span class="switch__track" aria-hidden="true"></span>
+                  <span>
+                    <span class="switch__label">Notify the owner</span>
+                    <span class="switch__hint">Leave on to flag this update for the owner in the next report. Off by default.</span>
+                  </span>
+                </label>
+                <p class="field__help" id="notify_owner-help">Turning this on marks the milestone as one the owner should be told about.</p>
+                <p class="field__error" data-error-for="notify_owner" role="alert"></p>
+              </div>
+            </fieldset>
+
+            <!-- The signed-in user's id travels with the submit. -->
+            <input type="hidden" id="updated_by_id" name="updated_by_id" value="">
+
+            <div style="display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:var(--space-5);">
+              <p class="field__help" style="margin-right:auto;">Tip: press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to save from anywhere in the form.</p>
+              <button type="button" class="btn btn--secondary" id="cancel-btn">Cancel</button>
+              <button type="submit" class="btn btn--primary" id="save-btn">Save Status Update</button>
+            </div>
+          </form>
+
+          <!-- ------------------------------------------------------------------
+               Right column: snapshot, privacy note and recent milestones
+               ------------------------------------------------------------------ -->
+          <div class="stack">
+            <div class="card card--sticky">
+              <div class="card__header">
+                <h3>Project snapshot</h3>
+                <p>What is on record right now.</p>
+              </div>
+              <div class="card__body" id="snapshot-body"></div>
+            </div>
+
+            <div class="alert alert--info" role="note">
+              <span class="alert__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+              </span>
+              <span class="alert__body">Photos stay private. They are stored securely and are only visible to signed-in APA staff.</span>
+            </div>
+
+            <div class="card">
+              <div class="card__header">
+                <h3>Recent milestones</h3>
+              </div>
+              <div class="card__body" id="recent-body"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

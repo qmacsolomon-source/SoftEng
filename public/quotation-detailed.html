@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Build a Customized Quotation by choosing the material and style for each of the eight works in the APA Engineering Services cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Customized Quotation — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/quotation-detailed.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Customized Quotation</h2>
+            <p>Swap the material and style for any of the eight works and watch the total move.</p>
+          </div>
+          <div class="page-header__actions">
+            <a class="btn btn--secondary" href="/quotation-quick.html">Quick quotation</a>
+            <a class="btn btn--ghost" href="/quotations.html">Quotation records</a>
+          </div>
+        </div>
+
+        <!-- Three-step guide. The controller moves aria-current as the form fills in. -->
+        <ol class="steps" id="steps" aria-label="Form progress">
+          <li class="step" id="step-client" aria-current="step">
+            <span class="step__marker" aria-hidden="true">1</span>
+            <span class="step__label">Client and project</span>
+          </li>
+          <li class="step" id="step-materials">
+            <span class="step__marker" aria-hidden="true">2</span>
+            <span class="step__label">Materials and styles</span>
+          </li>
+          <li class="step" id="step-terms">
+            <span class="step__marker" aria-hidden="true">3</span>
+            <span class="step__label">Terms and save</span>
+          </li>
+        </ol>
+
+        <div class="grid grid--sidebar-right">
+          <!-- ------------------------------------------------------------------
+               MAJOR FORM 2 - Customized (Detailed) Quotation
+               ------------------------------------------------------------------ -->
+          <form id="detailed-form" novalidate>
+            <div class="error-summary" data-error-summary tabindex="-1" role="alert" aria-live="assertive"></div>
+
+            <!-- 1. Client and project -->
+            <fieldset>
+              <legend>1. Client and project</legend>
+
+              <div class="field" data-field="client_select">
+                <label class="field__label" for="client_select">Client <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(choose a saved client or add a new one)</span></label>
+                <select class="select" id="client_select" name="client_select" required aria-describedby="client_select-help">
+                  <option value="">Loading clients…</option>
+                </select>
+                <p class="field__help" id="client_select-help">Pick a client already on file, or choose “Add a new client” and type their details below.</p>
+                <p class="field__error" data-error-for="client_select" role="alert"></p>
+              </div>
+
+              <!-- New client details: only needed when no saved client was chosen. -->
+              <div data-when="client_select=__new__" hidden>
+                <div class="form-grid">
+                  <div class="field" data-field="client_name">
+                    <label class="field__label" for="client_name">Client full name <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 2–60 characters)</span></label>
+                    <input class="input" type="text" id="client_name" name="client_name" maxlength="60"
+                           autocomplete="name" placeholder="e.g. Maria L. Santos"
+                           aria-describedby="client_name-help" required>
+                    <p class="field__help" id="client_name-help">The name that will be printed on the quotation.</p>
+                    <p class="field__error" data-error-for="client_name" role="alert"></p>
+                  </div>
+
+                  <div class="field" data-field="client_email">
+                    <label class="field__label" for="client_email">Email address</label>
+                    <input class="input" type="email" id="client_email" name="client_email" maxlength="254"
+                           inputmode="email" autocomplete="email" placeholder="name@example.com"
+                           aria-describedby="client_email-help">
+                    <p class="field__help" id="client_email-help">Optional, but it is where the quotation will be sent. Example: maria@example.com.</p>
+                    <p class="field__error" data-error-for="client_email" role="alert"></p>
+                  </div>
+
+                  <div class="field" data-field="client_phone">
+                    <label class="field__label" for="client_phone">Contact number</label>
+                    <input class="input" type="tel" id="client_phone" name="client_phone" maxlength="15"
+                           inputmode="tel" autocomplete="tel" placeholder="09171234567"
+                           aria-describedby="client_phone-help">
+                    <p class="field__help" id="client_phone-help">Optional. 11 digits starting with 09, or the +639 form.</p>
+                    <p class="field__error" data-error-for="client_phone" role="alert"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field" data-field="project_name">
+                  <label class="field__label" for="project_name">Project name <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 2–160 characters)</span></label>
+                  <input class="input" type="text" id="project_name" name="project_name" maxlength="160"
+                         placeholder="e.g. Santos Residence — Phase 2"
+                         aria-describedby="project_name-help" required>
+                  <p class="field__help" id="project_name-help">A short name for the build, so the quotation is easy to find later.</p>
+                  <p class="field__error" data-error-for="project_name" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="floor_area_sqm">
+                  <label class="field__label" for="floor_area_sqm">Floor area <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required, 10–5,000 sqm)</span></label>
+                  <div class="input-group">
+                    <input class="input" type="number" id="floor_area_sqm" name="floor_area_sqm"
+                           min="10" max="5000" step="0.01" inputmode="decimal" placeholder="120"
+                           aria-describedby="floor_area_sqm-help" required>
+                    <span class="input-group__suffix" aria-hidden="true">sqm</span>
+                  </div>
+                  <p class="field__help" id="floor_area_sqm-help">The total floor area to be built, in square metres. Every work below is priced from this figure.</p>
+                  <p class="field__error" data-error-for="floor_area_sqm" role="alert"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- 2. Base finish level and per-work selection -->
+            <fieldset>
+              <legend>2. Materials and styles for each work</legend>
+
+              <div class="field" data-field="base_finish_level">
+                <label class="field__label" for="base_finish_level">Base finish level <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(required)</span></label>
+                <select class="select" id="base_finish_level" name="base_finish_level" required aria-describedby="base_finish_level-help">
+                  <option value="">Loading finish levels…</option>
+                </select>
+                <p class="field__help" id="base_finish_level-help">Sets the starting rate per sqm for each work. Swapping a material or style below adjusts that rate up or down.</p>
+                <p class="field__error" data-error-for="base_finish_level" role="alert"></p>
+              </div>
+
+              <!-- One block per work, built from the catalogue by the page script. -->
+              <div id="work-blocks">
+                <div class="skeleton" style="height:96px;margin-bottom:var(--space-4);"></div>
+                <div class="skeleton" style="height:96px;margin-bottom:var(--space-4);"></div>
+                <div class="skeleton" style="height:96px;"></div>
+              </div>
+            </fieldset>
+
+            <!-- 3. Terms, attachment and notes -->
+            <fieldset>
+              <legend>3. Terms, attachment and notes</legend>
+
+              <div class="form-grid">
+                <div class="field" data-field="contingency_pct">
+                  <label class="field__label" for="contingency_pct">Contingency <span class="req" aria-hidden="true">*</span> <span class="field__required-note">(0–20%)</span></label>
+                  <div class="slider-field">
+                    <input type="range" id="contingency_pct" name="contingency_pct" min="0" max="20" step="1" value="5"
+                           aria-describedby="contingency_pct-help" required>
+                    <output class="slider-field__value" for="contingency_pct" data-slider-output="contingency_pct">5%</output>
+                  </div>
+                  <p class="field__help" id="contingency_pct-help">A buffer for price movements and unforeseen site work. It is applied on top of materials and labour, so 5% on ₱1,000,000 adds ₱50,000.</p>
+                  <p class="field__error" data-error-for="contingency_pct" role="alert"></p>
+                </div>
+
+                <div class="field" data-field="validity_date">
+                  <label class="field__label" for="validity_date">Quotation validity date</label>
+                  <input class="input" type="date" id="validity_date" name="validity_date"
+                         aria-describedby="validity_date-help">
+                  <p class="field__help" id="validity_date-help">The last day this price holds. 30 days from today is filled in for you; a past date is not allowed.</p>
+                  <p class="field__error" data-error-for="validity_date" role="alert"></p>
+                </div>
+              </div>
+
+              <div class="field" data-field="include_labor">
+                <span class="field__label" id="include_labor-label">Labour cost</span>
+                <label class="switch" for="include_labor">
+                  <input type="checkbox" id="include_labor" name="include_labor" role="switch" checked
+                         aria-describedby="include_labor-help">
+                  <span class="switch__track" aria-hidden="true"></span>
+                  <span>
+                    <span class="switch__label">Include labour cost</span>
+                    <span class="switch__hint">On by default. Turn it off to quote materials and installation only.</span>
+                  </span>
+                </label>
+                <p class="field__help" id="include_labor-help">Labour is worked out at the studio's standard percentage of the materials subtotal, and shows as its own line in the estimate.</p>
+                <p class="field__error" data-error-for="include_labor" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="attachment">
+                <label class="field__label" for="attachment">Attachments</label>
+                <div class="file-drop">
+                  <span class="file-drop__icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.4 11.1 12.3 20.2a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.6 3.6 0 1 1 5.1 5.1L9.6 17.5a1.8 1.8 0 0 1-2.5-2.5l7.8-7.8"/></svg>
+                  </span>
+                  <span class="file-drop__title">Drop a plan or specification here, or tap to choose a file</span>
+                  <span class="file-drop__hint">PDF, JPG, PNG, DOCX or XLSX, up to 5 MB</span>
+                  <span class="file-drop__selected">Selected: <span data-file-name>No file chosen</span></span>
+                  <input type="file" id="attachment" name="attachment"
+                         accept="application/pdf,image/jpeg,image/png,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.jpg,.jpeg,.png,.docx,.xlsx"
+                         aria-describedby="attachment-help">
+                </div>
+                <p class="field__help" id="attachment-help">Optional. Anything that supports the quotation: a specification sheet, a plan or a supplier quotation. Files stay private to signed-in staff.</p>
+                <p class="field__error" data-error-for="attachment" role="alert"></p>
+              </div>
+
+              <div class="field" data-field="remarks">
+                <label class="field__label" for="remarks">Notes</label>
+                <textarea class="textarea" id="remarks" name="remarks" rows="4" maxlength="300"
+                          placeholder="e.g. Price excludes the perimeter fence and the carport. Client will supply the tiles."
+                          aria-describedby="remarks-help"></textarea>
+                <p class="field__help" id="remarks-help">Inclusions, exclusions and assumptions. Optional, up to 300 characters.</p>
+                <span class="char-counter" data-counter-for="remarks">0 / 300 characters</span>
+                <p class="field__error" data-error-for="remarks" role="alert"></p>
+              </div>
+            </fieldset>
+
+            <!-- Hidden fields carried with the submit. -->
+            <input type="hidden" id="quotation_id" name="quotation_id" value="auto">
+            <input type="hidden" id="price_source_at" name="price_source_at" value="">
+            <input type="hidden" id="created_by" name="created_by" value="">
+            <input type="hidden" id="csrf_token" name="csrf_token" value="">
+            <input type="hidden" id="labor_pct" name="labor_pct" value="15">
+            <input type="hidden" id="client_id" name="client_id" value="">
+
+            <div style="display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;justify-content:flex-end;margin-top:var(--space-5);">
+              <p class="field__help" style="margin-right:auto;">Tip: press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to save from anywhere in the form.</p>
+              <button type="reset" class="btn btn--secondary" id="reset-btn">Reset Selections</button>
+              <button type="submit" class="btn btn--primary btn--lg" id="save-btn">Save Detailed Quotation</button>
+            </div>
+          </form>
+
+          <!-- ------------------------------------------------------------------
+               Right column: the live running total
+               ------------------------------------------------------------------ -->
+          <div class="stack">
+            <div class="card card--sticky">
+              <div class="card__header">
+                <h3>Running total</h3>
+                <p>Recomputed on every material, style or quantity change.</p>
+              </div>
+              <div class="card__body">
+                <div class="total-panel">
+                  <div class="total-panel__hero">
+                    <div class="total-panel__hero-label">Customized estimate</div>
+                    <div class="total-panel__hero-value total-value" id="total-value"
+                         role="status" aria-live="polite" aria-atomic="true">—</div>
+                    <div class="total-panel__hero-hint" id="total-hint">Choose a base finish level and a floor area to begin.</div>
+                  </div>
+
+                  <div id="panel-state"></div>
+                  <div id="panel-warning"></div>
+
+                  <ul class="breakdown-list" id="breakdown" aria-label="Estimated cost per work"></ul>
+
+                  <dl class="quote-summary" id="panel-summary" style="margin-left:0;width:100%;"></dl>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__header">
+                <h3>How this is estimated</h3>
+              </div>
+              <div class="card__body">
+                <dl class="detail-list">
+                  <div class="detail-list__row">
+                    <dt>Estimation basis</dt>
+                    <dd>Fajardo, <em>Simplified Construction Estimate</em></dd>
+                  </div>
+                  <div class="detail-list__row">
+                    <dt>Material prices</dt>
+                    <dd>Wilcon Depot</dd>
+                  </div>
+                  <div class="detail-list__row">
+                    <dt>Prices last updated</dt>
+                    <dd id="price-updated">—</dd>
+                  </div>
+                  <div class="detail-list__row">
+                    <dt>Base rate used</dt>
+                    <dd id="base-rate-note">—</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+
+            <div class="alert alert--info" role="note">
+              <span class="alert__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+              </span>
+              <span class="alert__body">
+                Each work is priced as <strong>floor area × base rate × material factor × style multiplier</strong>.
+                Rates per sqm are visible on each work block, and the total updates as you change them.
+              </span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Review a project's status, milestone timeline and site photos in the APA Engineering Services project management and cost estimation system.">
+  <meta name="robots" content="noindex">
+  <title>Project — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/project-detail.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Project</h2>
+            <p>Status, milestones and site photos.</p>
+          </div>
+          <!-- Toolbar. It is filled after the project loads and is hidden when printing. -->
+          <div class="page-header__actions" id="detail-actions"></div>
+        </div>
+
+        <!-- The whole record (identity block, timeline and side panel) is drawn here. -->
+        <div id="project-root"></div>
+
+        <!-- Shown only on the printed copy. -->
+        <div class="print-footer">APA Engineering Services — Antipolo, Philippines</div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+</body>
+</html>

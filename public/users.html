@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create and manage the Administrator and Staff accounts that can sign in to the APA Engineering Services system.">
+  <meta name="robots" content="noindex">
+  <title>User management — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/users.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>User management</h2>
+            <p>Create accounts and control who can sign in.</p>
+          </div>
+          <div class="page-header__actions">
+            <button type="button" class="btn btn--primary" id="add-user" data-add>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              Add user
+            </button>
+          </div>
+        </div>
+
+        <div class="alert alert--info mb-5" role="note">
+          <span class="alert__icon" aria-hidden="true">&#8505;</span>
+          <span class="alert__body">Only Administrators can see this page. Staff accounts cannot open it
+          at all — the server rejects the request and the navigation link is hidden.</span>
+        </div>
+
+        <!-- Headline figures -->
+        <div class="grid grid--4 mb-5">
+          <div class="stat-card">
+            <span class="stat-card__label">Total accounts</span>
+            <span class="stat-card__value" id="stat-total">—</span>
+            <span class="stat-card__hint">Administrators and Staff</span>
+          </div>
+          <div class="stat-card stat-card--blue">
+            <span class="stat-card__label">Administrators</span>
+            <span class="stat-card__value" id="stat-admins">—</span>
+            <span class="stat-card__hint">Full access, including prices</span>
+          </div>
+          <div class="stat-card stat-card--accent">
+            <span class="stat-card__label">Staff</span>
+            <span class="stat-card__value" id="stat-staff">—</span>
+            <span class="stat-card__hint">Quotations, projects and site updates</span>
+          </div>
+          <div class="stat-card stat-card--green">
+            <span class="stat-card__label">Active accounts</span>
+            <span class="stat-card__value" id="stat-active">—</span>
+            <span class="stat-card__hint">Able to sign in</span>
+          </div>
+        </div>
+
+        <!-- Filters applied in the browser over the full account list -->
+        <form class="filter-bar" id="user-filters" role="search" aria-label="Filter accounts">
+          <div class="field" data-field="keyword">
+            <label class="field__label" for="user-keyword">Search</label>
+            <input class="input" type="search" id="user-keyword" name="keyword"
+                   placeholder="Name or email" aria-describedby="user-keyword-help">
+            <p class="field__help" id="user-keyword-help">Matches the full name or the email address.</p>
+          </div>
+
+          <div class="field" data-field="role">
+            <label class="field__label" for="user-role">Role</label>
+            <select class="select" id="user-role" name="role" aria-describedby="user-role-help">
+              <option value="">All roles</option>
+              <option value="admin">Administrator</option>
+              <option value="staff">Staff</option>
+            </select>
+            <p class="field__help" id="user-role-help">Restrict to one role.</p>
+          </div>
+
+          <div class="field" data-field="status">
+            <label class="field__label" for="user-status">Status</label>
+            <select class="select" id="user-status" name="status" aria-describedby="user-status-help">
+              <option value="">All statuses</option>
+              <option value="active">Active</option>
+              <option value="deactivated">Deactivated</option>
+            </select>
+            <p class="field__help" id="user-status-help">Restrict to active or deactivated accounts.</p>
+          </div>
+
+          <div class="filter-bar__actions">
+            <button type="reset" class="btn btn--secondary" data-reset>Reset</button>
+          </div>
+
+          <p class="filter-bar__count" id="users-count" role="status" aria-live="polite">Loading accounts…</p>
+        </form>
+
+        <div class="card">
+          <div class="card__header">
+            <div>
+              <h3>Accounts</h3>
+              <p>Everyone who can sign in, with their role and last sign-in.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <caption>Account list for the firm. Deactivating an account blocks sign-in immediately.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Contact number</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Last sign-in</th>
+                  <th scope="col">Added</th>
+                  <th scope="col" class="actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

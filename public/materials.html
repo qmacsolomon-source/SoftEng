@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse the Wilcon Depot material catalogue and the Fajardo-based finish-package rates used for APA Engineering Services quotations.">
+  <meta name="robots" content="noindex">
+  <title>Materials &amp; prices — APA Engineering Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/materials.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#page">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+
+      <main class="page" id="page">
+        <!-- Price source and the actions an Administrator may take -->
+        <div class="page-header">
+          <div class="page-header__text">
+            <h2>Materials &amp; prices</h2>
+            <p id="materials-source">Loading the price source…</p>
+          </div>
+          <div class="page-header__actions" id="materials-actions"></div>
+        </div>
+
+        <!-- Staff see an explanation here instead of the admin buttons -->
+        <div id="materials-note" class="mb-5"></div>
+
+        <!-- Headline figures -->
+        <div class="grid grid--4 mb-5">
+          <div class="stat-card">
+            <span class="stat-card__label">Materials in catalogue</span>
+            <span class="stat-card__value" id="stat-total">—</span>
+            <span class="stat-card__hint">Active and retired combined</span>
+          </div>
+          <div class="stat-card stat-card--green">
+            <span class="stat-card__label">Active materials</span>
+            <span class="stat-card__value" id="stat-active">—</span>
+            <span class="stat-card__hint">Quoted at current prices</span>
+          </div>
+          <div class="stat-card stat-card--blue">
+            <span class="stat-card__label">Works covered</span>
+            <span class="stat-card__value stat-card__value--small" id="stat-coverage">—</span>
+            <span class="stat-card__hint">of the eight work types</span>
+          </div>
+          <div class="stat-card stat-card--amber">
+            <span class="stat-card__label">Last refreshed</span>
+            <span class="stat-card__value stat-card__value--small" id="stat-refreshed">—</span>
+            <span class="stat-card__hint" id="stat-refreshed-hint">&nbsp;</span>
+          </div>
+        </div>
+
+        <!-- Filters (mirrored into the address bar) -->
+        <form class="filter-bar" id="filters" role="search" aria-label="Filter materials">
+          <div class="field" data-field="keyword">
+            <label class="field__label" for="filter-keyword">Search</label>
+            <input class="input" type="search" id="filter-keyword" name="keyword"
+                   placeholder="Material, brand or SKU" aria-describedby="filter-keyword-help">
+            <p class="field__help" id="filter-keyword-help">Matches the material name, brand or SKU.</p>
+          </div>
+
+          <div class="field" data-field="work_type">
+            <label class="field__label" for="filter-work">Work</label>
+            <select class="select" id="filter-work" name="work_type" aria-describedby="filter-work-help">
+              <option value="">All works</option>
+              <option value="flooring">Flooring</option>
+              <option value="ceiling">Ceiling</option>
+              <option value="walls">Walls</option>
+              <option value="roofing">Roofing</option>
+              <option value="doors_windows">Doors and Windows</option>
+              <option value="toilet_bath">Toilet and Bath</option>
+              <option value="kitchen">Kitchen</option>
+              <option value="electrical_lighting">Electrical and Lighting</option>
+            </select>
+            <p class="field__help" id="filter-work-help">Only show one work type.</p>
+          </div>
+
+          <div class="field" data-field="include_inactive">
+            <label class="switch" for="filter-include">
+              <input type="checkbox" id="filter-include" name="include_inactive" role="switch"
+                     aria-describedby="filter-include-help">
+              <span class="switch__track" aria-hidden="true"></span>
+              <span class="switch__label">Include retired</span>
+            </label>
+            <p class="field__help" id="filter-include-help">Retired materials are hidden by default.</p>
+          </div>
+
+          <div class="filter-bar__actions">
+            <button type="submit" class="btn btn--primary" data-apply>Apply</button>
+            <button type="reset" class="btn btn--secondary" data-reset>Reset</button>
+          </div>
+
+          <p class="filter-bar__count" id="filter-count" role="status" aria-live="polite">Loading materials…</p>
+        </form>
+
+        <!-- The catalogue table -->
+        <div class="card mb-5">
+          <div class="card__header">
+            <div>
+              <h3>Material catalogue</h3>
+              <p id="materials-count">Prices are per unit at Wilcon Depot unless noted.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <caption>Every material kept for quoting, with its current unit price and cost factor.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Work</th>
+                  <th scope="col">Material</th>
+                  <th scope="col">Unit</th>
+                  <th scope="col" class="num">Unit price</th>
+                  <th scope="col">Supplier</th>
+                  <th scope="col">Style variant</th>
+                  <th scope="col">Last updated</th>
+                  <th scope="col">Active</th>
+                  <th scope="col" class="actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="materials-body"></tbody>
+            </table>
+          </div>
+          <div id="materials-pagination"></div>
+        </div>
+
+        <!-- Finish packages and their per-work rates -->
+        <div class="card mb-5" id="packages-card">
+          <div class="card__header">
+            <div>
+              <h3>Finish packages and rates</h3>
+              <p>Standard, Elegant, Luxury and Bare packages, costed per square metre.</p>
+            </div>
+          </div>
+          <div class="card__body" id="packages-body"></div>
+        </div>
+
+        <!-- Recent price refresh events -->
+        <div class="card">
+          <div class="card__header">
+            <div>
+              <h3>Recent price refreshes</h3>
+              <p>The last few price updates recorded for the catalogue.</p>
+            </div>
+          </div>
+          <div class="card__body" id="refresh-log"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
