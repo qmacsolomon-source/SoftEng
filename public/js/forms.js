@@ -581,3 +581,38 @@ export function relaxNativeValidation(form) {
   form.setAttribute('novalidate', '');
   return form;
 }
+
+/**
+ * Attaches a UI-only mock submit handler to a form.
+ * Works without Supabase / Backend database connections.
+ * 
+ * @param {string} formId - The HTML id of the form element
+ * @param {Function} [onSuccess] - Optional callback after valid submission
+ */
+export function initMockForm(formId, onSuccess) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    // Trigger native browser UI validation (accessibility & HTML5 constraints)
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    // Capture form values into a clean object
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    console.log(`[Form UI Test - #${formId}] Payload Captured:`, payload);
+
+    // Call optional callback or display confirmation
+    if (typeof onSuccess === 'function') {
+      onSuccess(payload);
+    } else {
+      alert(`Form "${formId}" validation passed!\n\nCaptured Data:\n` + JSON.stringify(payload, null, 2));
+    }
+  });
+}

@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Review, print or update a quotation in the APA Engineering Services project management and cost estimation system.">
+  <meta name="description" content="Prepare a project quotation with a guided, three-step form.">
   <meta name="robots" content="noindex">
-  <title>Quotation — APA Engineering Services</title>
+  <title>New Quotation — APA Engineering Services</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="/css/styles.css">
-  <script type="module" src="/js/pages/quotation-detail.js"></script>
+  <script type="module" src="/js/pages/quotation-detail-page.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#page">Skip to content</a>
@@ -22,20 +22,261 @@
       <header class="topbar" id="topbar"></header>
 
       <main class="page" id="page">
+        <div id="quotation-wizard-view">
         <div class="page-header">
           <div class="page-header__text">
-            <h2>Quotation</h2>
-            <p>Review, print or update this quotation.</p>
+            <h2>New Quotation</h2>
+            <p>Enter the project details, define the scope, then review the estimate.</p>
           </div>
-          <!-- Toolbar. Hidden automatically when printing. -->
-          <div class="page-header__actions" id="detail-actions"></div>
+          <div class="page-header__actions">
+            <a class="btn btn--ghost" href="/quotations.html">Quotation records</a>
+          </div>
         </div>
 
-        <!-- The print-ready document and the status editor are rendered here. -->
-        <div id="quotation-root"></div>
+        <ol class="steps wizard-steps" id="wizard-steps" aria-label="Quotation form progress">
+          <li class="step" data-step-indicator="0" aria-current="step">
+            <span class="step__marker" aria-hidden="true">1</span>
+            <span class="step__label">Project Info</span>
+          </li>
+          <li class="step" data-step-indicator="1">
+            <span class="step__marker" aria-hidden="true">2</span>
+            <span class="step__label">Scope &amp; Costing</span>
+          </li>
+          <li class="step" data-step-indicator="2">
+            <span class="step__marker" aria-hidden="true">3</span>
+            <span class="step__label">Review &amp; Attachments</span>
+          </li>
+        </ol>
+
+        <form id="quotation-wizard" class="card quotation-wizard" novalidate>
+          <div class="error-summary" id="step-error-summary" role="alert" aria-live="assertive" tabindex="-1"></div>
+          <div class="quotation-wizard__content">
+            <section class="wizard-panel" data-step-panel="0" aria-labelledby="project-step-title">
+              <div class="wizard-panel__heading">
+                <span class="wizard-panel__eyebrow">Step 1 of 3</span>
+                <h3 id="project-step-title" tabindex="-1">Project Info</h3>
+                <p>Tell us who the quotation is for and where the work will take place.</p>
+              </div>
+
+              <fieldset>
+                <legend>Client details</legend>
+                <div class="form-grid">
+                  <div class="field" data-field="client_name">
+                    <label class="field__label" for="client_name">Client full name <span class="req" aria-hidden="true">*</span></label>
+                    <input class="input" id="client_name" name="client_name" type="text" autocomplete="name" maxlength="60" required>
+                    <p class="field__error" data-error-for="client_name" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="client_email">
+                    <label class="field__label" for="client_email">Email address <span class="req" aria-hidden="true">*</span></label>
+                    <input class="input" id="client_email" name="client_email" type="email" autocomplete="email" maxlength="254" required>
+                    <p class="field__error" data-error-for="client_email" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="client_phone">
+                    <label class="field__label" for="client_phone">Contact number <span class="req" aria-hidden="true">*</span></label>
+                    <input class="input" id="client_phone" name="client_phone" type="tel" autocomplete="tel" maxlength="15" placeholder="09171234567" required>
+                    <p class="field__error" data-error-for="client_phone" role="alert"></p>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Project details</legend>
+                <div class="form-grid">
+                  <div class="field" data-field="project_name">
+                    <label class="field__label" for="project_name">Project name</label>
+                    <input class="input" id="project_name" name="project_name" type="text" maxlength="160" placeholder="e.g. Santos Residence">
+                    <p class="field__error" data-error-for="project_name" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="project_location">
+                    <label class="field__label" for="project_location">Project location <span class="req" aria-hidden="true">*</span></label>
+                    <input class="input" id="project_location" name="project_location" type="text" autocomplete="street-address" maxlength="160" placeholder="Barangay, city and province" required>
+                    <p class="field__error" data-error-for="project_location" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="project_type">
+                    <label class="field__label" for="project_type">Project type <span class="req" aria-hidden="true">*</span></label>
+                    <select class="select" id="project_type" name="project_type" required>
+                      <option value="">Select a project type</option>
+                      <option>Residential - New Build</option>
+                      <option>Residential - Renovation</option>
+                      <option>Residential - Extension</option>
+                      <option>Commercial - Fit-out</option>
+                      <option>Commercial - New Build</option>
+                      <option>Industrial / Warehouse</option>
+                      <option>Institutional</option>
+                      <option>Other</option>
+                    </select>
+                    <p class="field__error" data-error-for="project_type" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="floor_area_sqm">
+                    <label class="field__label" for="floor_area_sqm">Floor area (sqm) <span class="req" aria-hidden="true">*</span></label>
+                    <input class="input" id="floor_area_sqm" name="floor_area_sqm" type="number" min="10" max="5000" step="0.01" inputmode="decimal" required>
+                    <p class="field__error" data-error-for="floor_area_sqm" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="number_of_floors">
+                    <label class="field__label" for="number_of_floors">Number of floors <span class="req" aria-hidden="true">*</span></label>
+                    <input class="input" id="number_of_floors" name="number_of_floors" type="number" min="1" max="20" step="1" required>
+                    <p class="field__error" data-error-for="number_of_floors" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="target_start_date">
+                    <label class="field__label" for="target_start_date">Target start date</label>
+                    <input class="input" id="target_start_date" name="target_start_date" type="date">
+                    <p class="field__error" data-error-for="target_start_date" role="alert"></p>
+                  </div>
+                </div>
+              </fieldset>
+            </section>
+
+            <section class="wizard-panel" data-step-panel="1" aria-labelledby="scope-step-title" hidden>
+              <div class="wizard-panel__heading">
+                <span class="wizard-panel__eyebrow">Step 2 of 3</span>
+                <h3 id="scope-step-title" tabindex="-1">Scope &amp; Costing</h3>
+                <p>Choose the finish level and the work included in this estimate.</p>
+              </div>
+
+              <fieldset>
+                <legend>Finish package <span class="req" aria-hidden="true">*</span></legend>
+                <div class="option-grid" id="finish_package" data-field="finish_package">
+                  <label class="option"><input type="radio" name="finish_package" value="bare" required><span class="option__body"><span class="option__title">Bare</span><span class="option__desc">Essential finish level</span></span></label>
+                  <label class="option"><input type="radio" name="finish_package" value="standard"><span class="option__body"><span class="option__title">Standard</span><span class="option__desc">Practical everyday finishes</span></span></label>
+                  <label class="option"><input type="radio" name="finish_package" value="elegant"><span class="option__body"><span class="option__title">Elegant</span><span class="option__desc">Enhanced materials and detail</span></span></label>
+                  <label class="option"><input type="radio" name="finish_package" value="luxury"><span class="option__body"><span class="option__title">Luxury</span><span class="option__desc">Premium finish selections</span></span></label>
+                </div>
+                <p class="field__error" data-error-for="finish_package" role="alert"></p>
+              </fieldset>
+
+              <fieldset>
+                <legend>Works included <span class="req" aria-hidden="true">*</span></legend>
+                <p class="field__help">Select at least one work item to include in the estimate.</p>
+                <div class="option-grid option-grid--compact" id="works_included" data-field="works_included">
+                  <label class="option"><input type="checkbox" name="works_included" value="flooring"><span class="option__body"><span class="option__title">Flooring</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="ceiling"><span class="option__body"><span class="option__title">Ceiling</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="walls"><span class="option__body"><span class="option__title">Walls</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="roofing"><span class="option__body"><span class="option__title">Roofing</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="doors_windows"><span class="option__body"><span class="option__title">Doors and Windows</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="toilet_bath"><span class="option__body"><span class="option__title">Toilet and Bath</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="kitchen"><span class="option__body"><span class="option__title">Kitchen</span></span></label>
+                  <label class="option"><input type="checkbox" name="works_included" value="electrical_lighting"><span class="option__body"><span class="option__title">Electrical and Lighting</span></span></label>
+                </div>
+                <p class="field__error" data-error-for="works_included" role="alert"></p>
+              </fieldset>
+
+              <fieldset>
+                <legend>Cost adjustments</legend>
+                <div class="form-grid">
+                  <div class="field" data-field="contingency_pct">
+                    <label class="field__label" for="contingency_pct">Contingency (%)</label>
+                    <input class="input" id="contingency_pct" name="contingency_pct" type="number" min="0" max="20" step="0.5" value="10">
+                    <p class="field__error" data-error-for="contingency_pct" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="labor_pct">
+                    <label class="field__label" for="labor_pct">Labour (%)</label>
+                    <input class="input" id="labor_pct" name="labor_pct" type="number" min="0" max="100" step="0.5" value="15">
+                    <p class="field__error" data-error-for="labor_pct" role="alert"></p>
+                  </div>
+                  <div class="field field--switch" data-field="include_labor">
+                    <label class="switch" for="include_labor">
+                      <input id="include_labor" name="include_labor" type="checkbox" checked>
+                      <span class="switch__track" aria-hidden="true"></span>
+                      <span class="switch__label">Include labour in estimate</span>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <aside class="wizard-estimate" aria-live="polite">
+                <div>
+                  <span class="wizard-estimate__label">Live estimate</span>
+                  <p class="wizard-estimate__hint">A preliminary estimate based on your selected scope.</p>
+                </div>
+                <strong id="live-estimate">PHP 0.00</strong>
+              </aside>
+            </section>
+
+            <section class="wizard-panel" data-step-panel="2" aria-labelledby="review-step-title" hidden>
+              <div class="wizard-panel__heading">
+                <span class="wizard-panel__eyebrow">Step 3 of 3</span>
+                <h3 id="review-step-title" tabindex="-1">Review &amp; Attachments</h3>
+                <p>Add optional files or notes. Review all information before submitting.</p>
+              </div>
+
+              <fieldset>
+                <legend>Quotation details</legend>
+                <div class="form-grid">
+                  <div class="field" data-field="validity_date">
+                    <label class="field__label" for="validity_date">Valid until</label>
+                    <input class="input" id="validity_date" name="validity_date" type="date">
+                    <p class="field__help">Optional; the date cannot be in the past.</p>
+                    <p class="field__error" data-error-for="validity_date" role="alert"></p>
+                  </div>
+                  <div class="field" data-field="site_plan">
+                    <label class="field__label" for="site_plan">Site plan or attachment</label>
+                    <input class="input" id="site_plan" name="site_plan" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                    <p class="field__help" id="attachment-help">Optional. PDF, JPG or PNG, up to 5 MB.</p>
+                    <p class="field__error" data-error-for="site_plan" role="alert"></p>
+                  </div>
+                  <div class="field span-2" data-field="remarks">
+                    <label class="field__label" for="remarks">Remarks</label>
+                    <textarea class="textarea" id="remarks" name="remarks" maxlength="300" rows="4" placeholder="Any assumptions or additional details for this quotation"></textarea>
+                    <p class="field__help"><span id="remarks-count">0</span>/300 characters</p>
+                    <p class="field__error" data-error-for="remarks" role="alert"></p>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="wizard-review card card--flush" aria-labelledby="review-summary-title">
+                <div class="card__header">
+                  <div>
+                    <h4 id="review-summary-title">Quotation summary</h4>
+                    <p>Your current selections and estimate.</p>
+                  </div>
+                  <strong class="wizard-review__total" id="review-total">PHP 0.00</strong>
+                </div>
+                <div class="card__body" id="review-summary"></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="card__footer quotation-wizard__footer">
+            <button type="button" class="btn btn--secondary" id="previous-step" hidden>Previous</button>
+            <span class="spacer"></span>
+            <button type="button" class="btn btn--primary" id="next-step">Next</button>
+            <button type="submit" class="btn btn--accent" id="review-submit" hidden>Review &amp; Submit</button>
+          </div>
+        </form>
+
+        <p class="field__help quotation-wizard__notice">This form uses a local demo submission. No quotation or attachment is sent to a server.</p>
+        </div>
+
+        <section id="quotation-detail-view" hidden>
+          <div class="page-header">
+            <div class="page-header__text">
+              <h2>Quotation</h2>
+              <p>Review, print or update this quotation.</p>
+            </div>
+            <div class="page-header__actions" id="detail-actions"></div>
+          </div>
+          <div id="quotation-root"></div>
+        </section>
       </main>
     </div>
   </div>
+
+  <dialog class="wizard-dialog" id="summary-modal" aria-labelledby="summary-modal-title">
+    <div class="modal modal--wide">
+      <div class="modal__header">
+        <div>
+          <h3 id="summary-modal-title">Confirm quotation details</h3>
+          <p>Check this summary before the mock submission.</p>
+        </div>
+        <button type="button" class="icon-button" id="close-summary" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal__body" id="modal-summary"></div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--secondary" id="edit-quotation">Make changes</button>
+        <button type="button" class="btn btn--primary" id="confirm-submit">Confirm submission</button>
+      </div>
+    </div>
+  </dialog>
 
   <div class="toast-region" id="toast-region" aria-live="polite"></div>
 </body>

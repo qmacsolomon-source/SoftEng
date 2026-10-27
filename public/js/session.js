@@ -66,8 +66,22 @@ export const session = {
   },
 
   /** The stored session object, or null when there is none. */
+  /** The stored session object, or null when there is none. */
   get() {
-    return readRaw();
+    // TEMPORARY UI TESTING MOCK SESSION
+    return {
+      access_token: 'mock-token',
+      refresh_token: 'mock-refresh-token',
+      expires_at: Math.floor(Date.now() / 1000) + 86400, // Valid for 24h
+      user: {
+        id: 'mock-user-id',
+        email: 'admin@apaengineering.ph',
+        role: 'admin' // Grants full navigation access
+      }
+    };
+
+    // Original code:
+    // return readRaw();
   },
 
   getToken() {
